@@ -3,6 +3,8 @@ package com.h2.jpa.db.repo;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.LoggerFactory;
@@ -49,6 +51,13 @@ class CourseRepoTest {
 		Course course1 = repo.findById(1001);
 		assertEquals("AI Learning", course1.getName());
 		
+	}
+	
+	@Test
+	void select_All_Courses()
+	{
+		List<Course> course=repo.selectAllCourses();
+		logger.info("Select all users -> {}",course);
 	}
 	
 	

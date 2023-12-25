@@ -7,10 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.h2.jpa.db.entity.Course;
+import com.h2.jpa.db.entity.Rating;
+import com.h2.jpa.db.entity.Student;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 
 @Repository
@@ -19,6 +27,7 @@ public class CourseRepo
 {
 	@Autowired
 	EntityManager em;
+
 	
 	public org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -48,15 +57,45 @@ public class CourseRepo
 		em.remove(course);
 	}
 	
+	//JPQL java persistence query language
+	public List<Course> selectAllCourses()
+	{
+		Query query = em.createNamedQuery("selectAllCourse");
+		List<Course> result=query.getResultList();
+		logger.info("All Courses using createQ -> {}",result);
+		return result;
+	}
+	
+	public void getratingofCourse(int id)
+	{
+		Course course=em.find(Course.class, id);
+		logger.info("Review of {} -> {}",id,course.getRating());
+		
+	}
+	public void addratingtoCourse(int id,Rating rating)
+	{
+		//get course
+		Course course=em.find(Course.class, id);
+		logger.info("Review of {} -> {}",id,course.getRating());
+		
+		//add review to that course
+		course.addRating(rating);
+		rating.setCourse(course);
+		
+		//save to db
+		em.persist(rating);
+		
+	}
+	
 	public void ManageEM()
 	{
 		
-/*		Course update = new Course(1006,"Spring Boot");
+		Course update = new Course("Spring Boot");
 		em.persist(update);
 		
 		em.flush();
 		
-		Course insert =new Course(1007,"MySQL");
+		Course insert =new Course("MySQL");
 		em.persist(insert);
 		
 		em.flush();  //to sync the db
@@ -67,13 +106,8 @@ public class CourseRepo
 		
 		insert.setName("PostgreSQL - Updated");
 		
-		em.flush(); */
+		em.flush(); 
 		
-		//JPQL java persistence query language
-		
-		TypedQuery<Course> query = em.createQuery("Select c from Course c",Course.class);
-		List<Course> result=query.getResultList();
-		logger.info("All Courses using createQ -> {}",result);
 		
 		// Native Query
 		
@@ -88,6 +122,41 @@ public class CourseRepo
 		filter_query1.setParameter("id",1002);
 		List<Course> filter_result1=filter_query1.getResultList();
 		logger.info("Filter 1002 using nativeQ as parameter name -> {}",filter_result1);
+		
+		
+		
+	    
+	   
 	}
+   
+    
+	/* public void critical_q()
+	    {
+		//Criteria Query
+			
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			
+			CriteriaQuery<Course> cq=cb.createQuery(Course.class);
+			
+			Root<Course> courseRoot=cq.from(Course.class);
+			
+			Join<Object, Object> join = courseRoot.join("student",JoinType.LEFT);
+			
+			//no need for join Predicate pre=cb.like(courseRoot.get("name"), "J%");
+			
+			//cq.where(pre);
+			
+		    TypedQuery<Course> critical_query = em.createQuery(cq.select(courseRoot));
+			
+			List<Course> critical_Query_result=critical_query.getResultList();
+			logger.info("Critical Query 1 -> {}",critical_Query_result);
+			logger.info("Critical Query to get J% -> {}",critical_Query_result);
+			logger.info("Critical Query left Join {}",critical_Query_result);
+		    
+	    }
+	    
+	    */
+
+	
 
 }
