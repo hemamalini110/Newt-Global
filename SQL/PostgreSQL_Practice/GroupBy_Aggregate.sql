@@ -65,5 +65,30 @@ select 10/3::numeric(4,2);
 select (revenues_domestic + revenues_international) as "total_revenue" from movies_revenues mr  ;
 
 
+-- Having 
+
+select movie_lang , sum(movie_length) as length_greater_200 from movies group by movie_lang having sum(movie_length)> 200;
+
+select director_id  , sum(movie_length) as length_greater_200 
+from movies                                                     --1  -- 2 where 
+group by director_id                                            -- 3 groupy -- 4 having -- select --distinct -orderby --limit
+having sum(movie_length)> 200
+order by director_id ;
+
+-- where filter on selected records
+-- having filter on result group
+
+-- if the group by column has null value means it also consider that 
+-- to handle that using COALESCE(colname ,'no department') 
+
+select * from products p 
+rollback;
+delete from products where prod_name='paper';
+insert into products (prod_name) values (NULL);
+
+select coalesce (prod_name,'No Product'), count(prod_name)
+from products p 
+group by(prod_name);
+
 
 
