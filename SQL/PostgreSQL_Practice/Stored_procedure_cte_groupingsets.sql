@@ -162,6 +162,25 @@ group by
 	rollup (balance,name); 
 
 
+---- group by cube(col1,col2) result 2n
+
+it will return the multiple grouping sets all the possible groups.
+cube(col1,col2,col3)
+
+col1,col2,col3
+col1,col2
+col1,col3
+col2,col3
+col1
+col2
+col3
+()
+
+select region, country , avg(round(imports/1000000,2))
+from trades.trade_data td 
+where country in ('USA','France','Belgium')
+group by cube(region,country)
+;
 
 
 
