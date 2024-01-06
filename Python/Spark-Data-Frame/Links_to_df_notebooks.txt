@@ -1,5 +1,4 @@
- Link to Spark DF basics :
-    https://shorturl.at/tuSY6
+ [Link to Spark DF basics](https://shorturl.at/tuSY6).
 
  [Link to Spark DF Operation](https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93eaaa8714f173bcfc/8600411090163959/3663803986792939/1814862767480944/latest.html).
  
